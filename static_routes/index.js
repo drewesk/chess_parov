@@ -11,7 +11,7 @@ const people = [{
     message: 'Is this a news site I\'m posting on???'
   },
   {
-    name: 'Cat',
+    name: 'Cat-Person',
     message: '*meow*'
   }
 ];
