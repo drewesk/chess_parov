@@ -1,1 +1,4 @@
-### Update me when at a good CRUD point w/ an ERD
+
+## chess_parov
+
+> A fan-site for one of the greatest chess players alive, Garry Kasparov.
