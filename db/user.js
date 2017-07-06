@@ -11,5 +11,5 @@ module.exports = {
   deleteUser: (user_id) => {
   return knex('user').where('id', user_id).del();
   }
-  
+
 }

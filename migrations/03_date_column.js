@@ -13,6 +13,6 @@ exports.down = function(knex, Promise) {
 
     table.dropColumn('created_at');
     table.datetime('date');
-    
+
   });
 };
