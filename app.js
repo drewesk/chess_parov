@@ -4,28 +4,26 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const ejs = require('ejs');
+const cors = require('cors');
+const dotEnv = require('dotenv').config();
 
-const dotEnv = require('dotenv').config()
-
-
-const index = require('./routes/index');
-const user = require('./routes/user');
+const index = require('./static_routes/index');
+const user = require('./auth/user');
 
 const app = express();
 
-app.set('views', path(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
-// uncomment after favicon.ico
-// app.use(favicon(path.join(__dirname, 'public', 'favicon.jpg')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.jpg')));
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors);
+
+app.use(cors());
 
 app.use('/', index);
 app.use('/user', user)
@@ -37,13 +35,10 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-// error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
   res.status(err.status || 500);
   res.render('error');
 });

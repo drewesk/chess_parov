@@ -18,7 +18,7 @@ const people = [{
 
 
 router.get('/', (req, res, next) => {
-  res.render('../views/index.html.ejs', {
+  res.render('../views/index.hbs', {
     people: people
   });
 });
