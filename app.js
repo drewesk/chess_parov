@@ -23,7 +23,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(cors());
+app.use(cors({
+  origin: process.env.CORS_ORIGIN,
+  credentials: true
+}));
 
 app.use('/', index);
 app.use('/user', user)

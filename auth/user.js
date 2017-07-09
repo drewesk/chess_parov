@@ -2,6 +2,7 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const router = express.Router();
 const User = require('../db/user');
+const Article = require('../db/article');
 
 router.get('/', (req, res, next) => {
   res.json({
@@ -63,7 +64,7 @@ router.post('/login', (req, res, next) => {
                 });
 
                 res.json({
-                    user,
+                    id: user.id,
                     message: "Logged in 🗝"
                 });
               } else {
@@ -79,13 +80,36 @@ router.post('/login', (req, res, next) => {
   }
 });
 
+
 function validUser(user) {
+  const emailRegEx = user.email.match(/@/);
   const validEmail = typeof user.email == 'string' &&
-    user.email.trim() != '';
-  const validPassword = typeof user.email == 'string' &&
+    user.email.trim() != '' && emailRegEx[0] == "@";
+  const validPassword = typeof user.password == 'string' &&
     user.password.trim() != '' &&
     user.password.trim().length > 5;
   return validEmail && validPassword;
 }
+
+// breachy routes
+
+router.get('/:id', (req, res, next) => {
+    User.getOne(req.params.id)
+      .then(user => {
+        console.log(user);
+        res.json(user)
+      })
+})
+
+router.get('/:id/articles', (req, res, next) => {
+  if(!isNaN(req.params.id)) {
+    Article.getByUserID(req.params.id).then(articles => {
+      res.json(articles)
+    });
+  } else {
+    next(new Error('invalid user id'));
+  }
+
+})
 
 module.exports = router;
