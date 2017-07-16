@@ -2,7 +2,6 @@ const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
-const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotEnv = require('dotenv').config();
@@ -10,6 +9,7 @@ const dotEnv = require('dotenv').config();
 const index = require('./static_routes/index');
 const user = require('./auth/user');
 
+const authMiddleware = require('./auth/middleware');
 const app = express();
 
 app.set('views', path.join(__dirname, 'views'));
@@ -20,13 +20,14 @@ app.use(favicon(path.join(__dirname, 'public', 'favicon.jpg')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(cors({
   origin: process.env.CORS_ORIGIN,
   credentials: true
 }));
+
+app.use(authMiddleware.checkTokenSetUser);
 
 app.use('/', index);
 app.use('/user', user)
