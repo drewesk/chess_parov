@@ -1,12 +1,14 @@
-require('dotenv').config();
+const dotenv = require('dotenv')
+dotenv.config();
 
 module.exports = {
+
   development: {
     client: 'pg',
-    connection: 'postgres://localhost/chess-parov'
+    connection: "postgresql://localhost/chess-parov"
   },
 
-  Production: {
+  production: {
     client: 'pg',
     connection: process.env.DATABASE_URL + '?ssl=true'
   }

@@ -1,4 +1,4 @@
-const knex = require('./connection');
+const knex = require('../connection');
 
 module.exports = {
   create: (article) => {
