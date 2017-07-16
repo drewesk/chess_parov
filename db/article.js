@@ -4,7 +4,7 @@ module.exports = {
   create: (article) => {
     return knex("article").insert(article);
   },
-  updateTrail: (article_id, article) => {
+  updateArticle: (article_id, article) => {
     return knex('article').where('id', article_id).update(article, '*');
   },
   getByUserID: (id) => {

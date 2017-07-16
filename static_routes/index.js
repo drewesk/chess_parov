@@ -13,8 +13,7 @@ const people = [{
   {
     name: 'Cat-Person',
     message: '*meow*'
-  }
-];
+  }];
 
 
 router.get('/', (req, res, next) => {
