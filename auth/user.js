@@ -4,6 +4,7 @@ const JWT = require('jsonwebtoken');
 const router = express.Router();
 const User = require('../db/user');
 const Article = require('../db/article');
+const authMiddleware = require('./middleware')
 
 require('dotenv').config();
 
@@ -106,6 +107,39 @@ router.post('/login', (req, res, next) => {
 });
 
 
+router.get('/:id', authMiddleware.allowAccess, (req, res) => {
+  if(!isNan(req.params.id)) {
+    User.getOne(req.params.id)
+      .then(user => {
+        if(user) {
+          delete user.password;
+          res.json(user)
+        } else {
+          resError(res, 404, 'User Not Found')
+        }
+      });
+    } else {
+      resError(res, 500, 'Invalid ID')
+    }
+});
+
+router.get('/:id/articles', authMiddleware.allowAccess, (req, res) => {
+  if(!isNaN(req.params.id)) {
+    Article.getByUserID(req.params.id).then(articles => {
+      res.json(articles)
+    });
+  } else {
+    resError(res, 500, 'Invalid ID')
+  }
+});
+
+/////////////////////////////////////////////
+
+function resError(res, statusCode, message) {
+  res.status(statusCode);
+  res.json({message});
+}
+
 function validUser(user) {
   const emailRegEx = user.email.match(/@/);
   const validEmail = typeof user.email == 'string' &&
@@ -115,26 +149,5 @@ function validUser(user) {
     user.password.trim().length > 5;
   return validEmail && validPassword;
 }
-
-// breachy routes
-
-router.get('/:id', (req, res, next) => {
-    User.getOne(req.params.id)
-      .then(user => {
-        console.log(user);
-        res.json(user)
-      })
-})
-
-router.get('/:id/articles', (req, res, next) => {
-  if(!isNaN(req.params.id)) {
-    Article.getByUserID(req.params.id).then(articles => {
-      res.json(articles)
-    });
-  } else {
-    next(new Error('invalid user id'));
-  }
-
-})
 
 module.exports = router;
